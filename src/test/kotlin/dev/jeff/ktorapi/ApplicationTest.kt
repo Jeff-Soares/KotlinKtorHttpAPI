@@ -11,7 +11,7 @@ class ApplicationTest {
         withTestApplication(Application::module){
             handleRequest(HttpMethod.Get, "/").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Hello, world!!!", response.content)
+                assertEquals("Hello world!", response.content)
             }
         }
     }
