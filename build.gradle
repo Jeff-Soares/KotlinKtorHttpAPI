@@ -1,7 +1,29 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.google.cloud.tools:appengine-gradle-plugin:2.0.1'
+    }
+
+}
+
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.30'
+    id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
     id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
     id 'application'
+    id 'war'
+    id 'java'
+}
+
+apply plugin: 'com.google.cloud.tools.appengine'
+
+appengine {
+    deploy {
+        projectId = 'GCLOUD_CONFIG'
+        version = 'GCLOUD_CONFIG'
+    }
 }
 
 group = 'dev.jeff'
@@ -12,14 +34,18 @@ repositories {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+
     implementation "io.ktor:ktor-server-core:$ktor_version"
     implementation "io.ktor:ktor-server-netty:$ktor_version"
     implementation "ch.qos.logback:logback-classic:$logback_version"
     implementation "io.ktor:ktor-serialization:$ktor_version"
+    implementation "io.ktor:ktor-server-servlet:$ktor_version"
 
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
 
-    testImplementation 'org.jetbrains.kotlin:kotlin-test:1.5.21'
+    providedCompile 'com.google.appengine:appengine:1.9.91'
 }
 
 test {
@@ -27,13 +53,18 @@ test {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.jvmTarget = '11'
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = '1.8'
+    kotlinOptions.jvmTarget = '11'
 }
+
 
 application {
     mainClassName = 'dev.jeff.ktorapi.ApplicationKt'
+}
+
+sourceSets {
+    main.kotlin.srcDirs = ['src/main/kotlin']
 }
